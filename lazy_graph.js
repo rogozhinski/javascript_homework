@@ -1,21 +1,19 @@
-const graphFunctions = require('./graph_functions');
+const graphFile = require('./graph_functions.js');
 
-class LazyGraph {
+class LazyGraph extends graphFile.Graph {
 
-    constructor(graph, vertex){
-        this.graph = graph;
-        this.vertex = vertex;
-        this.map = graphFunctions.graphMap (this.graph);
-        this.sequence = graphFunctions.mergeBranches (this.map, graphFunctions.calulTree(this.map, this.vertex));
+    constructor (graphInput, vertex) {
+        super(graphInput, vertex);
+        this.sequence = this.mergeBranches (this.map, this.calulTree(this.map, this.vertex));
     }
 
     // возвращает объект со значениями всех вершин, которые пришлось преодолеть
-    valuesGenerator (graph, map, sequence) {
+    valuesGenerator () {
 
         // подставляет значения в вершины графа согласно общей ветке
-        function valuesGeneratorRecursion(graph, map, sequence, step, values) {
+        function valuesGeneratorRecursion(map, graph, sequence, step, values) {
             let vertex = sequence[step];
-            if (map[vertex]==null) {values[vertex] = graph[vertex]()}
+            if (map[vertex] === null) {values[vertex] = graph[vertex]()}
             else{
                 let argArray = []
                 for (let argCounter in map[vertex]) {
@@ -25,12 +23,13 @@ class LazyGraph {
             }
             if (step == 0) {return 1}
             else {step--}
-            valuesGeneratorRecursion(graph, map, sequence, step, values)
+            valuesGeneratorRecursion(map, graph, sequence, step, values)
         }   
 
         let values = {};
-        let step = sequence.length - 1;
-        valuesGeneratorRecursion (graph, map, sequence, step, values)
+        let step = this.sequence.length - 1;
+        
+        valuesGeneratorRecursion (this.map, this.graphInput, this.sequence, step, values)
         return values;
     }
 

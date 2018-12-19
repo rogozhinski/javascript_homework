@@ -1,41 +1,41 @@
-const graphFunctions = require('./graph_functions');
+const graphFile = require('./graph_functions.js');
 
-class EagerGraph {
+class EagerGraph extends graphFile.Graph {
 
-    constructor(graph){
-        this.graph = graph;
-        this.map = graphFunctions.graphMap (this.graph)
-    };
+    constructor (graph) {
+        super(graph, vertex);
+        this.sequence = this.mergeBranches (this.map, this.calulTree(this.map, this.vertex));
+    }
 
     // возвращает объект со значениями всех вершин, которые пришлось преодолеть
     // каждая вершина считается только единожды
-    valuesGenerator (graph, map) {
+    valuesGenerator () {
 
         // подставляет значения в вершины графа согласно общей ветке
-        function valuesGeneratorRecursion(graph, map, sequence, step, values) {
-            let vertex = sequence[step];
-            if (Object.keys(values).indexOf(vertex) == -1) {
-                if (map[vertex]==null) {values[vertex] = graph[vertex]()}
+        function valuesGeneratorRecursion(step, values) {
+            let vertex = this.sequence[step];
+            if (Object.keys(values).indexOf(vertex) === -1) {
+                if (this.map[vertex] === null) {values[vertex] = this.graph[vertex]()}
                 else{
                     let argArray = []
-                    for (let argCounter in map[vertex]) {
-                        argArray.push(values[map[vertex][argCounter]])
+                    for (let argCounter in this.map[vertex]) {
+                        argArray.push(values[this.map[vertex][argCounter]])
                     }
-                    values[vertex] = graph[vertex].apply(this, argArray)
+                    values[vertex] = this.graph[vertex].apply(this, argArray)
                 }
             }
-            if (step == 0) {return 1}
+            if (step === 0) {return 1}
             else {step--}
-            valuesGeneratorRecursion(graph, map, sequence, step, values)
+            valuesGeneratorRecursion(step, values)
         }   
 
         let values = {};
-        let verteces = Object.keys(map);
-        for (let vertexCounter in verteces){
-            let targetVertex = verteces[vertexCounter];
-            let sequence = graphFunctions.mergeBranches (this.map, graphFunctions.calulTree(this.map, targetVertex));
-            let step = sequence.length - 1;
-            valuesGeneratorRecursion (graph, map, sequence, step, values)
+        let verteces = Object.keys(this.map);
+        for (let vertexCounter in verteces) {
+            let targetVertex = verteces [vertexCounter];
+            let sequence = this.mergeBranches (this.map, this.calulTree(this.map, targetVertex));
+            let step = this.sequence.length - 1;
+            valuesGeneratorRecursion (step, values)
         }
         return values;
     }
