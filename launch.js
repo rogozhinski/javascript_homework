@@ -3,13 +3,13 @@ const EagerGraphFile = require('./eager_graph');
 
 // вставьте граф
 
-// const myAmazingGraph = {
-//     n: (xs) => xs.length,
-//     m: (xs, n) => xs.reduce((store, item) => item + store, 0) / n,
-//     m2: (xs, n) => xs.reduce((store, item) => item * store, 1) / n,
-//     v: (m, m2) => m*m - m2,
-//     xs: () => [1, 2, 3]
-//    }
+const myAmazingGraph = {
+    n: (xs) => xs.length,
+    m: (xs, n) => xs.reduce((store, item) => item + store, 0) / n,
+    m2: (xs, n) => xs.reduce((store, item) => item * store, 1) / n,
+    v: (m, m2) => m*m - m2,
+    xs: () => [1, 2, 3]
+   }
 
 // const myAmazingGraph = {
 //     n: (a) => a,  
@@ -18,9 +18,10 @@ const EagerGraphFile = require('./eager_graph');
 //     x: (z) => z,
 //    }
 
+
 // выберите вершину (для ленивого графа)
 
-const vertex = 'a';
+const vertex = 'n';
 
 
 // ленивый граф
