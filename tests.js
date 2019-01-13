@@ -1,5 +1,7 @@
 "use strict";
 
+var assert = require("assert");
+
 // изначальная конструкция "import" заменена более "традиционной" конструкцией
 // "required" из соображений поддержки версий языка
 // (мой Node.js пока про "import from" не узнал)
@@ -8,9 +10,7 @@ const machine = FSM.machine;
 const useState = FSM.useState;
 const useContext = FSM.useContext;
 
-
 // ТЕСТИРОВАНИЕ
-
 
 console.log("1. ИЗНАЧАЛЬНЫЙ ПРИМЕР");
 
@@ -52,12 +52,9 @@ const vacancyMachine1 = machine({
 //  Запуск
 console.log("Результат:")
 vacancyMachine1.transition('RESPOND', {resume: {name: 'Vasya', lastName: 'Pupkin'}});
-console.log("current state: ", vacancyMachine1.currentState, "\ncurrent context: ", vacancyMachine1.context, "\n")
-//we are leaving notResponded state
-//now state is responded
-//current state:  responded 
-//current context:  { id: 123, completed: true }
-
+assert(vacancyMachine1.currentState, 'responded', 'Fail in test 1: wrong state');
+assert(vacancyMachine1.context.id == '123', 'Fail in test 1: wrong id');
+assert(vacancyMachine1.context.completed == true, 'Fail in test 1: wrong \"completed\"');
 
 /////////////////////////////////////////////////////////////////////////////////////
 
@@ -87,9 +84,9 @@ const vacancyMachine2 = machine({
     }
 });
 
-console.log("Результат:")
+
 try {vacancyMachine2.transition('RESPOND', {resume: {name: 'Vasya', lastName: 'Pupkin'}})}
-catch (InvalidState) {console.log('Error: Attempt to set invalid state!\n')}
+catch (InvalidStateError) {console.log('Error: Attempt to set invalid state!\n')}
 
 //we are leaving notResponded state
 //now state is responded
@@ -124,13 +121,11 @@ const vacancyMachine3 = machine({
     }
 });
 
-console.log("Результат:")
 try {vacancyMachine3.transition('LOST_TRANSACTION', {resume: {name: 'Vasya', lastName: 'Pupkin'}})}
-catch (InvalidTransaction) {console.log('Error: Attempt to set invalid state!\n')}
+catch (InvalidTransactionError) {console.log('Error: Attempt to set invalid state!\n')}
 
 
 /////////////////////////////////////////////////////////////////////////////
-
 
 console.log("4. ВЛОЖЕННЫЕ КОНЕЧНЫЕ АВТОМАТЫ");
 
@@ -198,16 +193,19 @@ const vacancyMachine4 = machine({
                 }
             });
             vacancyMachine_inner.transition('RESPOND', {resume: {name: 'Vasya', lastName: 'Pupkin'}});
-            console.log("current state (inner): ", vacancyMachine_inner.currentState, 
-            "\ncurrent context(inner): ", vacancyMachine_inner.context, "\n")
+            assert(vacancyMachine_inner.currentState == 'responded', 'Fail in test 4: wrong state of inner machine' )
+            assert(vacancyMachine_inner.context.id == '123', 'Fail in test 4: wrong id of inner machine');
+            assert(vacancyMachine_inner.context.completed == true, 'Fail in test 4: wrong \"completed\" of inner machine');
         }
     }
 })
   
 //  Запуск
-console.log("Результат:")
 vacancyMachine4.transition('RESPOND', {resume: {name: 'Vasya', lastName: 'Pupkin'}});
-console.log("current state: ", vacancyMachine4.currentState, "\ncurrent context: ", vacancyMachine4.context, "\n")
+assert(vacancyMachine4.currentState == 'responded', 'Fail in test 4: wrong state' )
+assert(vacancyMachine4.context.id == '123', 'Fail in test 4: wrong id');
+assert(vacancyMachine4.context.completed == true, 'Fail in test 4: wrong \"completed\"');
+
 //we are leaving notResponded state
 //now state is responded
 //current state:  responded 
@@ -223,6 +221,9 @@ const vacancyMachine5 = machine({
     initialState: 'notResponded',
     context: {id: 123},
     states: {
+        theStateAfterNestedActions: {
+            onEntry: 'onStateEntry'
+        },
         responded: {
             onEntry: 'onStateEntry'
         },
@@ -230,7 +231,9 @@ const vacancyMachine5 = machine({
             onExit: {
                 onExitInnerString: 'onExitInnerString',
                 onExitInnerObject:{
-                    onExitInnerFunction() {console.log('onExitInnerFunction run')},
+                    onExitInnerFunction() {
+                        console.log('onExitInnerFunction run');
+                    },
                     onExitVeryInnerString: 'onExitVeryInnerString'
                 }
             },
@@ -243,13 +246,16 @@ const vacancyMachine5 = machine({
     },		
     actions: {
         onStateEntry: (event) => {
-            const [state] = useState();
             console.log('onStateEntry run')
         },
-        onExitInnerString: () => (console.log('onExitInnerString run')),
-        onExitVeryInnerString: () => (console.log('onExitVeryInnerString run'))
+        onExitInnerString: () => {console.log('onExitInnerString run')},
+        onExitVeryInnerString: () => {
+            console.log('onExitVeryInnerString run');
+            const [state, setContext] = useContext();
+            setContext({NestedActions: 'done'});
+        }
     }
 });
 
-console.log("Результат:");
 vacancyMachine5.transition('RESPOND', {resume: {name: 'Vasya', lastName: 'Pupkin'}});
+assert(vacancyMachine5.context.NestedActions == 'done', 'Fail in test 5: wrong state' )

@@ -12,7 +12,6 @@ function machine(apiObj) {
 // (в этом свете он напоминает класс в ООП)
 function machineCore(apiObj) {
 
-    machineStack.push()
     const machineObj = {
 
         currentState: apiObj.initialState,
@@ -23,9 +22,12 @@ function machineCore(apiObj) {
         // задаваемые либо строкой, либо массивом, либо функцией
         actionExecutor(stateAction){
 
-            if (stateAction === undefined){};
-
             switch(typeof(stateAction)){
+
+                case('undefined'): {
+                    break;
+                }
+
                 case('string'):
                     apiObj.actions[stateAction]();
                     break;
@@ -50,8 +52,9 @@ function machineCore(apiObj) {
         setState(newState){
 
             // проверка на существование состояния, в которое мы хотим перевести машину
-            if (Object.keys(apiObj.states).indexOf(newState) == -1){
-                throw InvalidState('Error: Attempt to set invalid state!');
+            if (!Object.keys(apiObj.states).includes(newState)){
+                const InvalidStateError = new Error('Attempt to set invalid state!');
+                throw InvalidStateError;
             };
 
             // если есть действия для выхода из состояния, выполняем их
@@ -81,16 +84,18 @@ function machineCore(apiObj) {
 
             // проверка, доступны ли транзакции для этого состояния
             if (Object.keys(apiObj.states[machineObj.currentState]).indexOf('on') == -1){
-                throw ('Error: There\'s no transactions for current state!')
+                const InvalidStateError = new Error('There\'s no transactions for current state!');
+                throw InvalidTransactionError;
             }
 
             // проверка, существует ли указанная транзакция для данного состояния
             if (Object.keys(apiObj.states[machineObj.currentState].on).indexOf(transitionName) == -1){
-                throw InvalidTransaction('Error: Invalid transition name!')
+                const InvalidTransitionError = new Error('Invalid transition name!');
+                throw InvalidTransitionError;
             }
 
             // если сервис указан, то обрабатываем его
-            if (apiObj.states[machineObj.currentState].on[transitionName].service != undefined){
+            if (apiObj.states[machineObj.currentState].on[transitionName].service !== undefined){
                 apiObj.states[machineObj.currentState].on[transitionName].service()
             }
             // иначе присваиваем машине состояние из графы target
