@@ -58,7 +58,7 @@ function machineCore(apiObj) {
             };
 
             // если есть действия для выхода из состояния, выполняем их
-            if (apiObj.states[machineObj.currentState].onExit != undefined){
+            if (apiObj.states[machineObj.currentState].onExit !== undefined){
                 machineObj.actionExecutor(apiObj.states[machineObj.currentState].onExit);
             }
 
@@ -66,7 +66,7 @@ function machineCore(apiObj) {
             machineObj.currentState = newState;
 
             // если есть действия для выхода в состояние, выполняем его
-            if (apiObj.states[machineObj.currentState].onEntry != undefined){
+            if (apiObj.states[machineObj.currentState].onEntry !== undefined){
                 machineObj.actionExecutor(apiObj.states[machineObj.currentState].onEntry);
             }
         },
@@ -83,13 +83,13 @@ function machineCore(apiObj) {
         transition (transitionName, transitionObject) {
 
             // проверка, доступны ли транзакции для этого состояния
-            if (Object.keys(apiObj.states[machineObj.currentState]).indexOf('on') == -1){
+            if (!Object.keys(apiObj.states[machineObj.currentState]).includes('on')){
                 const InvalidStateError = new Error('There\'s no transactions for current state!');
                 throw InvalidTransactionError;
             }
 
             // проверка, существует ли указанная транзакция для данного состояния
-            if (Object.keys(apiObj.states[machineObj.currentState].on).indexOf(transitionName) == -1){
+            if (!Object.keys(apiObj.states[machineObj.currentState].on).includes(transitionName)){
                 const InvalidTransitionError = new Error('Invalid transition name!');
                 throw InvalidTransitionError;
             }

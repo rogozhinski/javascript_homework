@@ -88,10 +88,6 @@ const vacancyMachine2 = machine({
 try {vacancyMachine2.transition('RESPOND', {resume: {name: 'Vasya', lastName: 'Pupkin'}})}
 catch (InvalidStateError) {console.log('Error: Attempt to set invalid state!\n')}
 
-//we are leaving notResponded state
-//now state is responded
-//current state:  responded 
-//current context:  { id: 123, completed: true }
 
 /////////////////////////////////////////////////////////////////////////////////////
 
@@ -147,8 +143,7 @@ const vacancyMachine4 = machine({
                         const [context, setContext] = useContext();			
                         const [state, setState] = useState();
                             setState('responded');
-                            setContext({completed: true}); // {id: 123, comleted: true}
-                        // });
+                            setContext({completed: true});
                     },
                 }
             }
@@ -178,8 +173,7 @@ const vacancyMachine4 = machine({
                                     const [context, setContext] = useContext();			
                                     const [state, setState] = useState();
                                         setState('responded');
-                                        setContext({completed: true}); // {id: 123, comleted: true}
-                                    // });
+                                        setContext({completed: true});
                                 }
                             }
                         }
@@ -205,11 +199,6 @@ vacancyMachine4.transition('RESPOND', {resume: {name: 'Vasya', lastName: 'Pupkin
 assert(vacancyMachine4.currentState == 'responded', 'Fail in test 4: wrong state' )
 assert(vacancyMachine4.context.id == '123', 'Fail in test 4: wrong id');
 assert(vacancyMachine4.context.completed == true, 'Fail in test 4: wrong \"completed\"');
-
-//we are leaving notResponded state
-//now state is responded
-//current state:  responded 
-//current context:  { id: 123, completed: true }
 
 /////////////////////////////////////////////////////////////////////////////////////
 
