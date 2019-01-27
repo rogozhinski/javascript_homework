@@ -1,0 +1,100 @@
+/* Modal */
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+input, div{
+  font-style: inherit;
+  font-size: inherit;
+}
+
+html {
+  height: 100%;
+}
+
+.main-wrapper{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  font-family: sans-serif;
+  font-size: 20px;
+}
+
+.header-wrapper{
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  padding-top: 30px;
+}
+
+.select-wrapper{
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  margin: 80px;
+}
+
+.description{
+  font-family: sans-serif;
+}
+
+.field{
+  /* этот дивак нужен как поле, который центруется на страницe и определяет размеры поля, */
+  /* в котором живет наш селект */
+  width: 400px;
+  min-width: 350px;
+}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  border: 1px solid #cccccc;
+}
+
+.input { 
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 40%;
+  border: 0;
+  padding: 5px 10px;
+}
+
+.input:focus {
+  outline: transparent;
+}
+
+.selected-variant{
+  display: flex;
+  flex-direction: row;
+  margin: 2px;
+  padding: 2px;
+  border: 1px solid blue;
+}
+
+.variant-set{
+  display: flex;
+  flex-direction: column;
+}
+
+.variant-set-overflow{
+  height: 180px;
+  overflow: auto;
+}
+
+.variant{
+  width: 100%;
+  height: 36px;
+  border: thin solid #cccccc;
+  padding: 5px 10px;
+  border-top-color: transparent;
+}
+
+.delete-variant{
+  margin: 3px;
+}

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>DOM_API_homework by Rogozhinski</title>
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./pic/hh.png" type="image/png">
+    <link rel="stylesheet" href="https://tech.hh.ru/bloko/styles/css/blocks/icon.css">
+</head>
+<body>
+    <div class="main-wrapper">
+        <div class="header-wrapper">
+            <h3> Самопальный мультиселект </h3>
+        </div>
+        <div class="select-wrapper">   <!-- flex-box, нужен как поле, в котором будет центоваться обертка --> 
+            <div class="field">      <!-- поле, который центруется на страницe и определяет размеры нашего селекта -->
+                <div class="input-wrapper">     <!-- флексбокс для реализации мультиселекта -->
+                    <input class="input" placeholder="Select town...">       <!-- и размещения кнопки с вариантами -->
+                    </input>             
+                </div>               
+            </div>
+        </div>
+    </div>
+    <script src="./selectMachine.js"></script>
+    <script src="./eventHandlers.js"></script>
+</body>
+</html>
+
