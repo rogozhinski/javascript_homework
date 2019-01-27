@@ -17,7 +17,6 @@ document.getElementsByClassName('input')[0].addEventListener('keydown', function
         selectMachine.input = selectMachine.input.slice(0, -1);
     }
     if (selectMachine.input !== '') {
-        console.log(selectMachine.input)
         selectMachine.actions.searchForVariants(selectMachine.input)
     }
 });
