@@ -5,24 +5,25 @@ let selectMachine = {
 
     input: '',
 
+    focusedVariantNum: 0,
+
     actions: {
 
         // в случае активации селекта
-        setActive: (variantStack) => {
+        setActiveInput: () => {
             if (selectMachine.state === 'idle'){
                 let droppingColumn = document.createElement('div');
                 droppingColumn.className = 'variant-set';
                 document.getElementsByClassName('field')[0].appendChild(droppingColumn);
                 // заполняем список возможными вариантами (или плейсхолдером)
                 selectMachine.actions.setVariants(['Type to search'])
-                // document.getElementsByClassName('field')[0].appendChild(droppingColumn);
-                selectMachine.state = 'active';
+                selectMachine.state = 'activeInput';
             }
         },
 
         // формируем заполненный вариантами или плейсхолдером селект
         setVariants: (variantsArray) => {
-            if (variantsArray !== "") {
+            if (variantsArray) {
                 // очищаем предыдущий сет в селекте, если там что-то есть
                 document.getElementsByClassName('variant-set')[0].innerHTML = '';
                 // заполняем новый cет
@@ -46,11 +47,17 @@ let selectMachine = {
                 selectMachine.actions.setVariants(variantsArray)})
         },
 
+        setActivePointer: () => {
+            selectMachine.focusedVariantNum = 0;
+            selectMachine.state = 'activePointer';
+        },
+
         // в случае деактивации селекта
         setIdle: () => {
-            if (selectMachine.state === 'active'){
+            if (selectMachine.state === 'activeInput' || selectMachine.state === 'activePointer'){
                 document.getElementsByClassName('variant-set')[0].remove();
                 selectMachine.state = 'idle';
+                selectMachine.focusedVariantNum = 0;
             }   
         },
 
@@ -78,6 +85,29 @@ let selectMachine = {
                         document.getElementsByClassName('input-wrapper')[0].children.length - 1
                     ]);
             document.getElementsByClassName('input')[0].value = "";
+        },
+
+        pointerDown: () => {
+            if (selectMachine.state === 'activeInput'){
+                selectMachine.actions.setActivePointer();
+            }
+            if (selectMachine.focusedVariantNum < document.getElementsByClassName('variant-set')[0].children.length){
+                selectMachine.focusedVariantNum += 1;
+            }
+            document.getElementsByClassName('variant-set')[0].
+            children[selectMachine.focusedVariantNum - 1].className = 'variant focused-variant';
+        },
+
+        pointerUp: () => {
+            if (selectMachine.state === 'activeInput'){
+                selectMachine.actions.setActivePointer();
+            }
+            selectMachine.state = 'activePointer';
+            if (selectMachine.focusedVariantNum > 1) {
+                selectMachine.focusedVariantNum -= 1;
+            }
+            document.getElementsByClassName('variant-set')[0].
+            children[selectMachine.focusedVariantNum - 1].className = 'variant focused-variant';
         }
     }
 };
