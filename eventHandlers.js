@@ -22,14 +22,14 @@ document.addEventListener('keydown', function(e) {
     // если кликнуть на стрелку вниз при активном состоянии и имеющихся вариантах,
     // то откроется возможность навигации по вариантам в помощью стрелочек "вверх" и "вниз"
     if (e.keyCode === 40 && document.getElementsByClassName('variant').length !== 0){
-        if(document.getElementsByClassName('variant-set')[0].children[0].innerHTML !== 'Type to write'){
+        if(document.getElementsByClassName('variant-set')[0].children[0].innerHTML !== 'Type to search'){
         selectMachine.actions.pointerDown();
         }
     }
 
     //кликнем вверх
     if (e.keyCode === 38 && document.getElementsByClassName('variant').length !== 0){
-        if(document.getElementsByClassName('variant-set')[0].children[0].innerHTML !== 'Type to write'){
+        if(document.getElementsByClassName('variant-set')[0].children[0].innerHTML !== 'Type to search'){
         selectMachine.actions.pointerUp(); 
         }
     }    
@@ -60,6 +60,7 @@ document.addEventListener('keypress', function(e) {
         } else {
         // if (selectMachine.input != inputValue){ 
         // если что-то другое, то запускаем поиск по городам
+        console.log('cock')
             selectMachine.actions.searchForVariants(inputValue); 
         }
         if (selectMachine.state === 'activePointer'){
